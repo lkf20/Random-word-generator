@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Random Word Generator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    .word {
+      font-size: 5em;
+      margin-top: 20px;
+    }
+
+    .letter {
+      display: inline-block;
+      padding: 5px 5px;
+      border-radius: 5px;
+      margin: 2px;
+    }
+    
+    #generateButton {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    margin-top: 30px;
+    }
+
+    #wordLength {
+      padding: 10px 20px;
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>Random Word Generator</h3>
+
+    <!--<label for="wordLength">Select Word Length:</label> -->
+    <select id="wordLength">
+      <option value="3">3 Letters</option>
+      <option value="4">4 Letters</option>
+      <option value="5">5 Letters</option>
+      <option value="6">6 Letters</option>
+    </select>
+    <button id="generateButton">Generate Word!</button>
+    <div class="word" id="word"></div>
+  </div>
+  <script>
+    
+      const generateButton = document.getElementById('generateButton');
+      const wordLengthSelect = document.getElementById('wordLength');
+      const wordElement = document.getElementById('word');
+
+    const orange = '#F28C28';
+    const green = 'MediumSeaGreen';
+    const blue = 'dodgerblue';
+    const pink = '#F987C5';
+    const purple = 'mediumpurple';
+    const red = 'red';
+    
+    const letterColors = {
+      'A': orange,
+      'B': orange,
+      'C': green,
+      'D': blue,
+      'E': pink,
+      'F': purple,
+      'G': pink,
+      'H': red,
+      'I': orange,
+      'J': green,
+      'K': blue,
+      'L': purple,
+      'M': green,
+      'N': pink,
+      'O': blue,
+      'P': green,
+      'Q': red,
+      'R': purple,
+      'S': orange,
+      'T': blue,
+      'U': green,
+      'V': red,
+      'W': orange,
+      'X': blue,
+      'Y': red,
+      'Z': pink
+    };
+
+    const threeLetterWords = ["bad", "bag", "bam", "ban", "bat", "bed", "beg", "bet", "bid", "bin", "bit", "bog", "box", "boy", "bug", "but", "cab", "can", "cap", "car", "cat", "cob", "cog", "cop", "cot", "cub", "cup", "cut", "dab", "dad", "dam", "den", "did", "din", "dip", "dog", "dot", "dug", "fan", "fat", "fed", "fin", "fit", "fix", "fog", "fox", "gab", "gag", "gal", "gap", "gas", "gem", "get", "gob", "got", "gut", "had", "hag", "ham", "hat", "hem", "hen", "hid", "him", "hip", "hit", "hog", "hop", "hot", "hub", "hug", "hut", "jab", "jam", "jet", "job", "jog", "jot", "jug", "jut", "keg", "kid", "kit", "lab", "lad", "lag", "lap", "led", "leg", "let", "lid", "lip", "lit", "lob", "log", "lot", "lug", "mad", "man", "map", "mat", "men", "met", "mix", "mob", "mom", "mop", "mug", "nab", "nag", "nap", "net", "nip", "not", "nub", "nut", "pad", "pal", "pan", "pat", "peg", "pen", "pep", "pet", "pig", "pin", "pit", "pop", "pot", "pox", "rag", "ram", "ran", "rap", "rat", "red", "rid", "rip", "rob", "rod", "rot", "rub", "rug", "rut", "sad", "sag", "sap", "sat", "set", "sin", "sip", "sit", "six", "sob", "sod", "sub", "sun", "tab", "tad", "tag", "tan", "tap", "tax", "ten", "this", "tin", "tip", "top", "tot", "tub", "tug", "van", "vat", "vet", "wag", "wax", "web", "wed", "wet", "win", "wit", "yak", "yam", "yap", "yes", "yet", "zap", "zip"];
+    const fourLetterWords = ['book', 'ball', 'bird', 'baby', 'bowl', 'bath', 'bake', 'bear', 'book','make','what', "blab", "crab", "grab", "scab", "stab", "slab", "brat", "chat", "flat", "gnat", "spat", "glad", "clan", "plan", "scan", "than", "brag", "drag", "flag", "snag", "stag", "chap", "clap", "flap", "slap", "snap", "trap", "clam", "cram", "scam", "slam", "spam", "swam", "tram", "wham", "back", "hack", "jack", "lack", "pack", "rack", "sack", "tack", "bash", "cash", "dash", "gash", "hash", "lash", "mash", "rash", "sash", "bath", "math", "fret", "beck", "deck", "neck", "peck", "then", "when", "knit", "quit", "slit", "spit", "skid", "slid", "twig", "brim", "grim", "skim", "slim", "swim", "trim", "whim", "chip", "clip", "drip", "flip", "grip", "ship", "skip", "slip", "snip", "trip", "whip", "kick", "lick", "nick", "pick", "sick", "tick", "wick", "fish", "dish", "wish", "chin", "grin", "shin", "skin", "spin", "thin", "twin", "crib", "blob", "glob", "knob", "slob", "snob", "blog", "clog", "frog", "chop", "crop", "drop", "flop", "glop", "plop", "shop", "slop", "stop", "dock", "lock", "rock", "sock", "tock", "rock", "shut", "grub", "snub", "stub", "drug", "plug", "slug", "snug", "chum", "drum", "glum", "plum", "scum", "slum", "spun", "stun", "spud", "stud", "thud", "buck", "duck", "luck", "muck", "puck", "suck", "tuck", "yuck", "gush", "hush", "lush", "mush", "rush", "when"];
+    const fiveLetterWords = ['apple', 'beach', 'bread', 'blood', 'broom', "black", "crack", "shack", "snack", "stack", "quack", "track", "clash", "crash", "flash", "slash", "smash", "check", "fleck", "speck", "wreck", "dwell", "shell", "smell", "spell", "swell", "brick", "chick", "click", "flick", "quick", "slick", "stick", "thick", "trick", "swish", "block", "clock", "flock", "shock", "smock", "stock", "chuck", "cluck", "pluck", "stuck", "truck", "blush", "brush", "crush", "flush", "slush", "where"];
+    const sixLetterWords = ['banana', 'bicycle', 'brother', 'butter', "school", "animal", "friend", "little", "people", "number", "father", "mother", "beauty", "yellow", "winter", "summer", "doctor", "sister", "planet", "forest", "silver", "window", "market", "parent", 
+    "bottle", "bridge", "castle", "drawer", "forest", "gather", "island", "jungle", "ladder", "letter", "manner", "napkin", "online", "pencil", "pocket", "replay", "rocket", "safety", "spider", "station", 
+    "target", "tunnel", "trophy", "unfold", "united", "vacuum", "vessel", "wander", "whisper", "wonder", "writer", "yellow", "abacus", "cancel", "defend", "engine", "flower", "global", "harbor", "ignore"];
+
+      console.log("test");
+
+      generateButton.addEventListener('click', () => {
+        console.log('Button clicked');
+        const wordLength = wordLengthSelect.value;
+        let randomWord = '';
+        if (wordLength === '3'){
+          randomWord = threeLetterWords[Math.floor(Math.random() * threeLetterWords.length)];
+        } else if (wordLength === '4') {
+          randomWord = fourLetterWords[Math.floor(Math.random() * fourLetterWords.length)];
+        } else if (wordLength === '5') {
+          randomWord = fiveLetterWords[Math.floor(Math.random() * fiveLetterWords.length)];
+        } else if (wordLength === '6') {
+          randomWord = sixLetterWords[Math.floor(Math.random() * sixLetterWords.length)];
+        }
+        
+        
+        let coloredWord = '';
+        for (let i = 0; i < randomWord.length; i++) {
+          const letter = randomWord[i];
+          //const color = letterColors[letter.toUpperCase()];
+          //coloredWord += `<span class="letter" style="background-color: ${color}">${letter}</span>`;
+          const color = letterColors[letter.toUpperCase()];
+          coloredWord += `<span class="letter" style="color: ${color}">${letter}</span>`;
+        }
+
+        wordElement.innerHTML = coloredWord;
+      });
+    </script>
+    
+</body>
+</html>
